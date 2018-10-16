@@ -1,0 +1,295 @@
+\XeTeXinputencoding "GB2312"
+
+\documentclass{beamer}
+\usetheme{CambridgeUS}
+\usepackage{xeCJK}
+\setCJKmainfont{SimSun}
+\usepackage{color,xcolor}            % 支持彩色文本、底色、文本框等
+\usepackage{cite}                    % 支持引用
+\usepackage{fontspec}
+\usepackage{latexsym}
+\usepackage{amsmath}                 % AMS LaTeX宏包
+\usepackage{amssymb}                 % 用来排版漂亮的数学公式
+\usepackage{amsbsy}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{mathrsfs}                % 英文花体字体
+\usepackage{bm}                      % 数学公式中的黑斜体
+\usepackage{relsize}                 % 调整公式字体大小?
+\usepackage{pgfplots}
+%\pagestyle{fancy}                    % 页眉页脚风格
+\usetikzlibrary{shapes.geometric, arrows,matrix,positioning,calc}
+%\setsansfont{楷体} % font name is case-sensitive
+ \usepackage[%paperwidth=18.4cm, paperheight= 26cm,
+            body={14.6true cm,22true cm},
+            twosideshift=0 pt,
+            %headheight=1.0true cm
+            ]{geometry}
+
+\usepackage[colorlinks,
+            linkcolor=red,
+            anchorcolor=blue,
+            citecolor=green
+            ]{hyperref}
+
+\begin{document}
+\title{ADER构造过程}
+\frame{\titlepage}
+
+\begin{frame}{ADER基本思想}
+对于黎曼问题：
+\begin{equation}
+  \begin{aligned}
+  &\partial_t U +\partial_x F(U) = 0 \\
+ & U(x,0)=\left\{ \begin{array}{l}
+	  U_L(x), x<x_{i+1/2}\\
+	  U_R(x), x>x_{i+1/2}\\
+  \end{array}\right.
+\end{aligned}
+\end{equation}
+
+根据泰勒展开，在拉格朗日体系下，可以得到$\tau$时刻近似为
+\begin{equation}
+  U(x_{i+1/2},\tau)= U(x_{i+1/2},0+) +\sum_{k=1}^{r-1} \left[\frac{d ^k}{d t^k}U(x,t)(x_{i+1/2}, 0+) \right] \frac{\tau^k}{k!}
+\end{equation}
+其中$U(x_{i+1/2},0+)$是通过$U_L(x_{i+1/2})$和$U_L(x_{i-1/2})$构造的黎曼解求得的Godunov状态。
+式中全导数可以通过如下形式得到，
+\begin{equation}
+  \frac{d}{dt} = \frac{\partial}{\partial t} + u\frac{\partial }{\partial x}
+\end{equation}
+
+\end{frame}
+\begin{frame}{高阶全导数}
+  \tiny
+因此可以给出一到二阶高阶全导数形式如下
+\begin{equation}
+  \frac{dU}{dt} = \frac{\partial U}{\partial t} +u\frac{\partial U}{\partial x}
+\end{equation}
+
+\begin{equation}
+  \begin{aligned}
+  \frac{d^2U}{dt^2}& = \frac{d}{dt}( \frac{\partial U}{\partial t} +u\frac{\partial U}{\partial x})\\
+  & =  \frac{\partial^2 U} {\partial t^2} +\frac{\partial u}{\partial t} \frac{\partial U}{\partial x} +2 u \frac{\partial ^2U}{\partial x \partial t} + u\frac{\partial u} {\partial x} \frac{\partial U} {\partial x} + u^2 \frac{\partial ^2 U} {\partial x^2}
+\end{aligned}
+\end{equation}
+
+%\begin{equation}
+%  \begin{aligned}
+%  \frac{d^3U}{dt^3}& = \frac{d}{dt}( \frac{\partial^2 U} {\partial t^2} +\frac{\partial u}{\partial t} \frac{\partial U}{\partial x} +2 u \frac{\partial ^2U}{\partial x \partial t} + u\frac{\partial u} {\partial x} \frac{\partial U} {\partial x} + u^2 \frac{\partial ^2 U} {\partial x^2})\\
+%  &= \frac{\partial^3 U} {\partial t^3} +\frac{}{}
+%\end{aligned}
+%\end{equation}
+%
+\end{frame}
+\begin{frame}{高阶时间导数}
+高阶时间导数求法：
+\begin{equation}
+  \begin{aligned}
+&	\frac{\partial_U}{\partial t} = -A \frac{\partial U}{\partial x}  \\
+& \frac{\partial ^2 U}{\partial x \partial t} = -\frac{\partial A}{\partial x}\frac{\partial U}{\partial x} -A \frac{\partial^2U}{\partial x^2}\\
+&	\frac{\partial^2 U}{\partial t^2} = -\frac{\partial A}{\partial t}\frac{\partial U}{\partial x} -A \frac{\partial^2U}{\partial x \partial t}\\
+&	\frac{\partial^3 U}{\partial x^2 \partial t} = -\frac{\partial^2 A}{\partial x^2}\frac{\partial U}{\partial x} -2\frac{\partial A }{\partial x} \frac{\partial^2U}{\partial x^2}-A\frac{\partial U^3}{\partial x^3}\\
+&	\frac{\partial^3 U}{\partial x \partial t^2} = -\frac{\partial^2 A}{\partial x \partial t}\frac{\partial U}{\partial x} -\frac{\partial A }{\partial x} \frac{\partial^2U}{\partial x \partial t}- \frac{\partia A}{\partial t}\frac{\partial U^2}{\partial x^2} - A\frac{\partial ^3 U}{\partial x^2 \partial t}\\ 
+&	\frac{\partial^3 U}{\partial t^3} = -\frac{\partial^2 A}{\partial t^2}\frac{\partial U}{\partial x}-\frac{\partial A }{\partial t} \frac{\partial^2U}{\partial x \partial t}- \frac{\partia A}{\partial t}\frac{\partial U^2}{\partial x \partial t} - A\frac{\partial ^3 U}{\partial x \partial t^2}\\ 
+\end{aligned}
+\end{equation}
+
+\end{frame}
+
+\begin{frame}{高阶空间导数的求法}
+  通过广义黎曼解，界面上空间导数发展方程为
+  \begin{equation}
+	\begin{aligned}
+	\frac{\partial U_x^{(k)}}{\partial \tau} + A (U(x_{i+1/2}(0+), 0+)) \frac{\partial U_x^{(k)}}{\partial x} = 0 \\
+	U_x^{(k)}(x_{i+1/2},0) =\left\{ \begin{aligned}
+		P_L^{(k)}(x_{i+1/2}), \hspace{0.2cm} \text{if}  \hspace{0.2cm} x<x_{i+1/2},\\
+		P_R^{(k)}(x_{i+1/2}), \hspace{0.2cm} \text{if}  \hspace{0.2cm} x>x_{i+1/2},\\
+	\end{aligned} \right.
+	\end{aligned}
+  \end{equation}
+  其中$A$为Jacob矩阵，$A=\frac{\partial F}{\partial U}$, $P_{L(R)}^{(k)} = \frac{\partial ^k U_{L(R)}(x)}{\partial x^k}$ 通过广义黎曼求解器可以得到更高阶空间导数。
+
+\end{frame}
+
+\begin{frame}{有限体积离散}
+  在拉氏框架下，网格点随时间运动方程为
+  \begin{equation}\label{eq:v}
+	\frac{dx(t)}{dt} = u(x,t)
+\end{equation}
+对黎曼问题
+ \begin{equation}\label{eq:1d}
+   \left\{ \begin{aligned}
+	   &\frac{\partial U}{\partial t} + \frac{\partial F}{\partial x} =0\\
+	   &\partial _t s_{xx}+u\partial_xs_{xx}-\frac{4}{3}\partial_x u=0\\
+	   &Q(x,t=0) = \left\{ \begin{aligned} 
+		   Q_L, \hspace{0.2cm} \text{if} \hspace{0.2cm} x<0\\
+		   Q_R, \hspace{0.2cm} \text{if} \hspace{0.2cm} x>0\\
+	   \end{aligned} \right.
+	 %  & \partial _t \rho +\partial_x(\rho u)=0\\
+	 %  & \partial _t (\rho u)+\partial_x(\rho u^2 + p -s_{xx})=0\\
+	 %  &\partial _t (\rho E)+\partial_x([\rho E + p -s_{xx}]u)=0\\
+	 \end{aligned}
+  \right.
+\end{equation}
+其中$U=(\rho,\rho u ,\rho E)$，$F = (\rho u, \rho u^2+p -s_{xx},(\rho E + p -s_{xx})u )$, $Q = (\rho,\rho u, \rho E)$。
+
+\end{frame}
+
+\begin{frame}{有限体积离散}
+
+\end{frame}
+
+
+\begin{frame}{三阶WENO格式下二阶空间导数构造方法}
+\tiny
+  We take the $U^{(1)}_L$ as an example, the same to $U_L$, we use two stencils $S(i-1,i)= c_{11} U_{i-1}+c_{12} U_{i}$ and $S(i,i+1) = c_{21}U_{i}+c_{22}U_{i+1}$ to construct the $U^{(1)L}_{i+1/2}$, 
+
+  In an uniform mesh, the coefficients $c_{11}$ and $c_{12}$ are constructed as 
+  \begin{equation}
+	\frac{c_{11} U_{i-1} +c_{12} U_i-(c_{11} U_{i-2}+c_{12} U_{i-1})}{\Delta x^2} = \frac{\partial^2 U_i}{\partial x^2} +O(\Delta x)
+  \end{equation}
+  We get $c_{11}=-1$ and $c_{12}=1$, in a similar process, we can get $c_{21} =-1$ and $c_{22}=1$, so 
+
+\begin{equation}
+  \begin{aligned}
+	q_1 = U_{i-1} -U_{i}\\ 
+	q_2 = U_{i} -U_{i+1}\\ 
+\end{aligned}
+\end{equation}
+
+Using $S(i-1,i,i+1)$ we can construct a 2nd order  approximation of $U^{(1)}_L$ 
+
+\begin{equation}
+  U^{(1)L}_{i+1/2} = \omega_1 q_1 +\omega_2 q_2
+ \end{equation}
+
+ where $\omega_i = \frac{\alpha _k}{\alpha_1+\alpha_2}$ and $\alpha_k = \frac{d_k}{(\beta_k+\varepsilon)^p}$, $d_k$ is the linear weights of $q_1$ and $q_2$ can be solved as 
+
+ \begin{equation}
+   \frac{d_1 q_1 + d_2 q_2}{\Delta x^2} = \frac{\partial^2 U_i}{\partial x^2} +O(\Delta x^2)
+\end{equation}
+Then we get $d_1 = \frac{1}{4}$ and $d_2 = \frac{3}{4}$. And the smoothness indicatros are 
+\begin{equation}
+  \beta_1 =q_1^2, \beta_2=q_2^2
+\end{equation}
+
+
+
+\end{frame}
+
+
+
+
+
+
+\end{frame}
+
+\begin{frame}{有限体积离散}
+\tiny
+  在区域$(x_{i-1/2}^n,t^n) \rightarrow (x_{i+1/2}^n,t^n) \rightarrow  (x_{i+1/2}^n,t^{n+1}) \rightarrow   (x_{i+1/2}^{n+1},t^{n+1})$积分
+
+\begin{equation}
+  {\int \int}_{\omega} (\frac{\partial U}{\partial t} +\frac{\partial F}{\partial x})dx dt = 0 
+\end{equation}
+基于格林公式可以写作
+
+\begin{equation}
+  \oint_{\partial \omega}(Udx - F dt) = 0
+\end{equation}
+展开有
+\begin{equation}
+  \int_{x_{i-1/2}^{n+1}}^{x_{i+1/2}^{n+1}}Udx -\int_{x_{i-1/2}^{n}}^{x_{i+1/2}^{n}}Udx +\int_{x_{i-1/2}^{n+1}}^{x_{i-1/2}^{n}}Udx -\int_{x_{i+1/2}^{n+1}}^{x_{i+1/2}^{n}}Udx- \left(\int_{t^n} ^{t^{n+1}}F(x_{i-1/2},t)dt - \int_{t^n} ^{t^{n+1}}F(x_{i+1/2},t)dt\right) = 0
+\end{equation}
+
+将 Eq.(\ref{eq:v})带入有，
+\begin{equation}
+  \int_{x_{i-1/2}^{n+1}}^{x_{i+1/2}^{n+1}}Udx -\int_{x_{i-1/2}^{n}}^{x_{i+1/2}^{n}}Udx - \left[ \begin{aligned}  &\int_{t^n} ^{t^{n+1}}F(x_{i-1/2},t)-u(x_{i-1/2},t)Udt\\
+							-&\int_{t^n} ^{t^{n+1}}F(x_{i+1/2},t)-u(x_{i+1/2},t)Udt\\
+						\end{aligned} \right]
+	= 0
+  \end{equation}
+  定义
+  \begin{equation}
+	f= F- uU
+  \end{equation}
+有
+\begin{equation}\label{eq:con}
+	  \int_{x_{i-1/2}^{n+1}}^{x_{i+1/2}^{n+1}}Udx -\int_{x_{i-1/2}^{n}}^{x_{i+1/2}^{n}}Udx - \left[ \int_{t^n} ^{t^{n+1}}f(x_{i-1/2},t)Udt
+	  -\int_{t^n} ^{t^{n+1}}f(x_{i+1/2},t)Udt \right]
+	= 0
+  \end{equation}
+\end{frame}
+  \begin{frame}
+  令单元平均值
+  \begin{equation}
+	\bar{U_i}^n= \frac{1}{\Delta x^n}  \int_{x_{i-1/2}^{n+1}}^{x_{i+1/2}^{n+1}}U(x,t^n)dx
+  \end{equation}
+  其中 $\Delta x^n = x_{i+1/2}^n - x_{i-1/2}^n$。
+  因此Eq.(\ref{eq:con})变为
+	
+  \begin{equation}
+	\bar{U_i}^{n+1} \Delta x_i^{n+1} - \bar{U_i}^n \Delta x_i^n - (F_{i-1/2}-F_{i+1/2}) = 0
+  \end{equation}
+  其中\begin{equation}
+	F_{i+1/2} = \int_{t^n} ^{t^{n+1}}f(x_{i+1/2},t)dt
+  \end{equation}
+
+\end{frame}
+
+  \begin{frame}{高斯积分}
+	对于$F_{i+1/2}$采用高斯积分
+	\begin{equation}
+	F_{i+1/2} = \int_{t^n} ^{t^{n+1}}f(x_{i+1/2},t)dt =  \sum_{g=1} ^\alpha \omega_g f(U(x_{i+1/2(t_g)},t_g)) \Delta t 
+  \end{equation}
+其中 $\alpha$为高斯点个数， $\omega_g$为$g$点加权值。
+\end{frame}
+
+
+\begin{frame}{Gaussian quadrature}
+  In numerical analysis, a quadrature rule is an approximation of the definite integral of a function, usually stated as a weighted sum of function values at specified points within the domain of integration. An n-point Gaussian quadrature rule named after Carl Friedrich Gauss, is a quadrature rule constructed to yield an exact result for polynomials of degree $2n-1$ or less by a suitable choice of the nodes $x_i$ and weightes $w_i$ for $i=1,\codts, n $. The most common domain of integration for such a rule is taken as $[-1,1]$, so the rule is stated as 
+\begin{equation}
+  \int_{-1}^1 f(x)dx \approx \sum_{i=0}^n \omega_i f(x_i)
+\end{equation}
+which is exact for polynomials of degree $2n-1$ or less. This exact rule is known as the Gauss-Legendre quadrature rule.
+
+
+%其中含有$2n+2$个待定系数，$x_k$，$A_k(k=0,1,\cdots,n)$，当$x_k$为等距离节点时得到插值求积公式代数精度为$n$
+
+\end{frame}
+\begin{frame}{Guass-Legendre quadrature}
+  \tiny
+  For the simplest integration problem stated above, i.e., $f(x)$ is well-approximated by polynomials on $[-1,1]$, the associated orthogonal polynomials are Legrendre-polynomials, denoted by $P_n(x)$. The i-th Gauss node, $x_i$ is the i-th root of $P_n$ and the weights are given by the formula(Abramowitz & Stegun 1972, p.887) 
+  \begin{equation}
+	\omega_i = \frac{2}{(1-x_i^2)[P_n'(x_i)]^2}
+\end{equation}
+
+Some lower-order quadrature rules are tabulated below 
+\begin{table}[htbp]
+  \small 
+  \centering
+  \setlength{\belowcaptionskip}{10pt}
+  \begin{tabular}{mmm}
+	\toprule
+	Number of points, $n$  & Points, $x_i$, & Weights, $\omega_i$ \\
+	\midrule
+	1 & 0 & 2 \\ 
+	2 & $\pm \frac{1}{\sqrt{3}}$ & 1 \\ 
+	3 & 0 ($\pm \sqrt{\frac{3}{5}}$) & $\frac{8}{9}$ ( $\frac{5}{9}$) \\   
+	4 & $\pm \sqrt{\frac{3}{7}-\frac{2}{7}\sqrt{\frac{6}{5}}}$ ( $\pm \sqrt{\frac{3}{7}+\frac{2}{7}\sqrt{\frac{6}{5}}}$)& $\frac{18-\sqrt{30}}{36}$ (  $ \frac{18+\sqrt{30}}{36}$ ) \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+Change of interval
+
+An integral over $[a,b]$ must be changed into an integral over $[-1,1]$ before applying the Gaussian quadrature rule. This change of interval can be done in the fllowing way
+\begin{equation}
+  \int_a^b f(x)dx = \frac{b-a}{2}\int_{-1}^1 f(\frac{b-a}{2}x+\frac{a+b}{2})dx
+\end{equation}
+
+
+\end{frame}
+
+		
+\end{document}
+
