@@ -287,8 +287,61 @@ An integral over $[a,b]$ must be changed into an integral over $[-1,1]$ before a
   \int_a^b f(x)dx = \frac{b-a}{2}\int_{-1}^1 f(\frac{b-a}{2}x+\frac{a+b}{2})dx
 \end{equation}
 
+对于区域$[0,\tau]$
 
 \end{frame}
+
+\begin{frame}{求解流程}
+  \tiny
+  \begin{equation}
+	\begin{aligned}
+	  & x_{i+1/2}^{n+1} = x_{i+1/2}^n+\sum_{g=1}^2 u(x_{i+1/2},t_g)\omega_g \Delta t\\
+	  & \Delta x_i^{n+1} = x_{i+1/2}^{n+1} -x_{i-1/2}^{n+1}\\
+	  & \Delta x_i^{n+1} \overline{U}_i^{n+1} = \Delta x_i^{n} \overline{U}_i^n + F_{i+1/2}-F_{i-1/2}\\
+	  & \overline{\hat{s}_{xx}}_i^{n+1} = \overline{s_{xx}}_i^n + \frac{ \Theta_{i+1/2}- \Theta_{i-1/2}}{\Delta x^n}\\
+	  & \overline{s_{xx}}_i^{n+1} = \Gamma( \overline{\hat{s}_{xx}}_i^{n+1})
+	\end{aligned}
+  \end{equation}
+  其中
+  \begin{equation}
+	\begin{aligned}
+	  &F_{i+1/2} = \sum_{g=1}^2 f(U(x_{i+1/2}), t_g) \omega_g \Delta t\\
+	  &\Theta_{i+1/2} = \sum_{g=1}^2 \frac{4}{3}\mu u(x_{i+1/2},t_g) \omega_g \Delta t\\
+	\end{aligned}
+  \end{equation}
+
+  通过泰勒展开
+  \begin{equation}
+	  U(x_{i+1/2},\tau) = U(x_{i+1/2},0) + \sum_{k=1}^{n-1} \frac{d^kU}{dt^k}\frac{\tau^n}{n!}
+	\end{equation}
+  \end{frame}
+  \begin{frame}{求解流程}
+	\tiny
+其中全导数
+
+\begin{equation}
+  \begin{aligned}
+  &\frac{dU}{dt} = \frac{\partial U}{\partial t} +u\frac{\partial U}{\partial x}\\
+  &\frac{d^2U}{dt^2} = \frac{d}{dt}( \frac{\partial U}{\partial t} +u\frac{\partial U}{\partial x})\\
+  & =  \frac{\partial^2 U} {\partial t^2} +\frac{\partial u}{\partial t} \frac{\partial U}{\partial x} +2 u \frac{\partial ^2U}{\partial x \partial t} + u\frac{\partial u} {\partial x} \frac{\partial U} {\partial x} + u^2 \frac{\partial ^2 U} {\partial x^2}
+\end{aligned}
+\end{equation}
+时间导数又可以转化为空间导数
+\begin{equation}
+  \begin{aligned}
+&	\frac{\partial U}{\partial t} = -A \frac{\partial U}{\partial x}  \\
+& \frac{\partial ^2 U}{\partial x \partial t} = -\frac{\partial A}{\partial x}\frac{\partial U}{\partial x} -A \frac{\partial^2U}{\partial x^2}\\
+&	\frac{\partial^2 U}{\partial t^2} = -\frac{\partial A}{\partial t}\frac{\partial U}{\partial x} -A \frac{\partial^2U}{\partial x \partial t}\\
+\end{aligned}
+\end{equation}
+最终需要构造高阶空间导数。
+根据重构 如WENO3可以构造二阶精度的$U_L(x_{i+1/2},0)$和$U_R(x_{i+1/2},0)$同样可以构造一阶精度的$U^{(1}_L(x_{i+1/2},0)$和$U^{(1)}_R(x_{i+1/2},0)$。WENO5可以构造四阶的$U_{L(R)}(x_{i+1/2},0)$ $\dots$ 一阶精度的
+$U^{(3)}_{L(R)}(x_{i+1/2},0)$。
+
+通过黎曼求解器可以根据$U_{L(R)}(x_{i+1/2},0)$求得$U(x_{i+1/2},0)$，同样的通过广义黎曼求解器可以根据$U^{(k)}_{L(R)}(x_{i+1/2},0)$得到$U^{(k)}(x_{1+1/2})$。
+
+\end{frame}
+
 
 		
 \end{document}
