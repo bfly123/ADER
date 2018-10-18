@@ -96,7 +96,7 @@
 
 \end{frame}
 
-\begin{frame}{高阶空间导数的求法}
+\begin{frame}{高阶空间导数和广义黎曼解}
   通过广义黎曼解，界面上空间导数发展方程为
   \begin{equation}
 	\begin{aligned}
@@ -108,6 +108,12 @@
 	\end{aligned}
   \end{equation}
   其中$A$为Jacob矩阵，$A=\frac{\partial F}{\partial U}$, $P_{L(R)}^{(k)} = \frac{\partial ^k U_{L(R)}(x)}{\partial x^k}$ 通过广义黎曼求解器可以得到更高阶空间导数。
+
+  这里$A (U(x_{i+1/2}(0+), 0+))$ 为冻结矩阵，则可以通过如HLL构造
+\begin{equation}
+  U^{(k)}(x_{i+1/2},0) = \frac{s_R U^{(k)}_R-s_L U^{(k)}_L +AU^{(k)}_L-AU^{(k)}_R}{s_R-s_L}
+\end{equation}
+其中$s_L(R)$通过$U_L$和$U_R$构造。
 
 \end{frame}
 
@@ -184,7 +190,7 @@ Then we get $d_1 = \frac{1}{4}$ and $d_2 = \frac{3}{4}$. And the smoothness indi
 
 \end{frame}
 
-\begin{frame}{有限体积离散}
+\begin{frame}{守恒方程有限体积离散}
 \tiny
   在区域$(x_{i-1/2}^n,t^n) \rightarrow (x_{i+1/2}^n,t^n) \rightarrow  (x_{i+1/2}^n,t^{n+1}) \rightarrow   (x_{i+1/2}^{n+1},t^{n+1})$积分
 
@@ -235,6 +241,47 @@ Then we get $d_1 = \frac{1}{4}$ and $d_2 = \frac{3}{4}$. And the smoothness indi
   \end{equation}
 
 \end{frame}
+\begin{frame}{Constitute equation}
+  \tiny
+  In the Lagrangian frame, the equation of the constitute model can be  written as 
+  \begin{equation} \label{eq:constitute}
+	\frac{\text{d}s_{xx}}{\text{d}t} = \frac{4\mu}{3} \frac{\partial u }{\partial x}
+  \end{equation}
+  For the cell-centered Lagrangian scheme, the geometrical conservation law is very important, that is, 
+  \begin{equation}
+	\frac{\dot{V}}{V} = \frac{\partial u}{\partial x}
+  \end{equation}
+  should be satisfied. In the one-dimensional case, the volume of the cell $I_i$ is evaluated by 
+  \begin{equation} \label{eq:volume}
+	V_i(t) = x_{i+1/2}(t) - x_{i-1/2}(t)
+  \end{equation}
+  Taking the material derivative on  the both sides of Eq.{\ref{eq:volume}}, we have 
+  \begin{equation}
+	\dot{V}_i(t) = u_{i+1/2}(t)- u _{i+1/2}(t)
+  \end{equation}
+We can get 
+\begin{equation}
+  \frac{\partial u}{\partial t}=\frac{\dot{V}_i(t)}{V_i} = \frac{u_{i+1/2}(t) - u_{i-1/2}(t)}{x_{i+1/2}-x_{i-1/2}}
+\end{equation}
+Then, The  semi-discrete formulation for Eq.{\ref{eq:constitute}} has the following form:
+\begin{equation}
+  \frac{ds_{xx}}{dt} = \frac{4\mu}{3}\frac{u_{i+1/2}- u_{i-1/2}}{\Delta x_i}
+\end{equation}
+%if we let
+%\begin{equation}
+%\Theta(i,\tau)=  \frac{4\mu}{3}u_{i+1/2}(\tau)
+%
+%- u_{i-1/2}(\tau)}{x_{i+1/2}(\tau) - x_{i-1/2}(\tau)}
+%\end{equation}
+%
+%\begin{equation}
+%  s_{xx}^{n+1} = s_{xx}^n+ \frac{}
+%\sum_{k=1}^{n-1}\Theta(i,t_g)\omega_g \Delta t 
+%\end{equation}
+
+\end{frame}
+
+
 
   \begin{frame}{高斯积分}
 	对于$F_{i+1/2}$采用高斯积分
@@ -339,6 +386,8 @@ An integral over $[a,b]$ must be changed into an integral over $[-1,1]$ before a
 $U^{(3)}_{L(R)}(x_{i+1/2},0)$。
 
 通过黎曼求解器可以根据$U_{L(R)}(x_{i+1/2},0)$求得$U(x_{i+1/2},0)$，同样的通过广义黎曼求解器可以根据$U^{(k)}_{L(R)}(x_{i+1/2},0)$得到$U^{(k)}(x_{1+1/2})$。
+
+
 
 \end{frame}
 
