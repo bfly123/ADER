@@ -387,9 +387,98 @@ $U^{(3)}_{L(R)}(x_{i+1/2},0)$。
 
 通过黎曼求解器可以根据$U_{L(R)}(x_{i+1/2},0)$求得$U(x_{i+1/2},0)$，同样的通过广义黎曼求解器可以根据$U^{(k)}_{L(R)}(x_{i+1/2},0)$得到$U^{(k)}(x_{1+1/2})$。
 
+\end{frame}
+
+\begin{frame}{$A$和$dA$}
+  \tiny
+  \begin{equation}
+	A=\left(
+	\begin{array}{llll}
+	  0 & 1 & 0 & 0 \\
+	  -u^2+\frac{\partial p }{\partial \rho} +\Gamma(\frac{u^2}{2}-e)& u(2-\Gamma)& \Gamma & -1\\
+	  (\Gamma(\frac{u^2}{2}-e)-e+\frac{\sigma_x}{\rho}+\frac{\partial p }{\partial \rho})u &  -\Gamma u^2-\frac{\sigma_x}{\rho} +e & (1+\Gamma)u & -u \\
+	  \frac{4}{3}\mu \frac{u}{\rho} &-\frac{4}{3}\mu \frac{1}{\rho}& 0 & u\\
+	\end{array}
+  \right)
+\end{equation}
+where,
+$e=E-\frac{u^2}{2}$, $\Gamma = \frac{\Gamma_0 \rho_0}{\rho}$, $\sigma_x= -p+s_{xx}$, $\frac{\partial p}{\partial \rho} = a_0^2 f'(\eta)$  
+
+\end{frame}
+
+\begin{frame}
+  \tiny
+\begin{equation} 
+ \begin{aligned}
+  & dA(1,1) = 0
+  \hspace{0.3cm}  dA(1,2) = 0
+   \hspace{0.3cm}  dA(1,3) = 0
+    \hspace{0.3cm} dA(1,4) = 0\\
+  & dA(2,1) =-2udu + a_0^2 f''(\eta)\frac{d\rho}{\rho_0}+d\Gamma(\frac{u^2}{2}-e)+\Gamma(udu-de)\\
+  & dA(2,2) = du(2-\Gamma)-ud\Gamma \\
+  & dA(2,3)= d\Gamma \\ 
+  & dA(2,4) = 0 \\
+  & dA(3,1) = (\Gamma(\frac{u^2}{2}-e)-e+\frac{\sigma_x}{\rho}+\frac{\partial p }{\partial \rho})du + (d\Gamma(\frac{u^2}{2}-e)+\Gamma(udu-de) -de + \frac{d\sigma_x}{\rho} -\frac{\sigma_x d\rho}{\rho^2} +  a_0^2 f''(\eta)\frac{d\rho}{\rho_0})u\\
+  &  dA(3,2) =- d\Gamma u^2-2u\Gamma -\frac{d\sigma_x}{\rho} +\frac{\sigma_x d\rho}{\rho^2} +de \\
+  & dA(3,3)= (1+\Gamma)du+d\Gamma u \\
+  & dA(3,4)=  -du \\  
+  & dA(4,1) =   \frac{4}{3}\mu \frac{du}{\rho}- \frac{4}{3}\mu \frac{u d\rho}{\rho^2} \\
+   & dA(4,2)=  \frac{4}{3}\mu \frac{d\rho}{\rho^2}  \\
+   & dA(4,3) = 0\\ 
+  & dA(4,4)= du \\
+\end{aligned}
+\end{equation}
+where
+$de=dE-udu$,$d\Gamma = -\frac{\Gamma_0 \rho_0 d\rho}{\rho^2}$, $d\sigma_x = -dp+ds_{xx}$.
 
 
 \end{frame}
+
+\begin{frame}{sub-cell WENO-3 construct}
+  \tiny
+
+  First, define sub-cell points
+  The sub-cell points $x_i^{(k)}$, $k=1,\dots,2r-1$ in $I_i$ are given by 
+  \begin{equation}
+	x_i^{(k)} =x_{i-1/2} + \frac{k-1}{2r-3}\Delta x
+  \end{equation}
+  For third-order scheme there are is no need of sub-cell points, $x_i^{(1)} = x_{(i-1/2)}$,$x_i^{2}=x_{(i+1/2)}$.
+
+  Step 2 Reconstruct (2r-2) point-wise values of $u$
+  Using $p_{WENO}^{2r-1}$ to get $u_i^{(k)}$
+  \begin{equation}
+	p_{WENO}^{2r-1} = \sum_{k=0}^{r-1} \omega_k q_k^r(x, \bar{u}_{i-r+1+k},\cdots,\bar{u}_{i+k}) 
+  \end{equation}
+
+\begin{equation}
+  u_i^{(k)}= u(x_i^{(k)}) + e_i^{(k)} (\Delta x)^{2r-1}
+\end{equation}
+
+Step 3, Construct $p_i(x)$
+Ansatz $p_i(x)$ of $u$ in $I_i$ as follows
+\begin{equation}
+  p_i(x)=\sum_{l=0}^{2r-2} a_l(\frac{x-x_{i-1/2}}{\Delta x})^l
+\end{equation}
+
+By the equation 
+\begin{equation}
+  \left\{
+  \begin{aligned}
+&	p_i(x_i^{(l)}) = u_i^{(l)}, \hspace{0.2cm} l=0,\cdots,2r-2\\
+&	\frac{1}{\Delta x} \int_{I_i}p_i(x) dx = \bar{u}_i 
+  \end{aligned}
+\right.
+\end{equation}
+
+
+
+\end{frame}
+
+
+
+
+
+
 
 
 		
