@@ -469,6 +469,24 @@ By the equation
   \end{aligned}
 \right.
 \end{equation}
+\end{frame}
+
+\begin{frame}
+For the third-order WENO scheme
+\begin{equation}
+  \begin{aligned}
+	U_i^{(1)} = U^R_{(i-1/2)}\\
+	U_i^{(2)} = U^L_{(i+1/2)}\\
+\end{aligned}
+\end{equation}
+
+\begin{equation}
+  \begin{aligned}
+	&a_0= U_i^{(1)}\\
+	&a_1 = 6\bar{U} -2 U_i^{(2)}-4U_i^{(1)}\\
+	&a_2=3(U_i^{(1)}+U_i^{(2)}-2\bar{U})
+  \end{aligned}
+\end{equation}
 
 
 
